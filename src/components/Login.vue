@@ -7,7 +7,9 @@
         <BCard title="Inicio de sesión" class="my-3">
           <BForm @submit.prevent="login">
             <div class="my-3">
-              <BInput type="text" v-model="username" id="username" required placeholder="Usuario" />
+              <BInput
+                type="text" v-model="username"
+                id="username" required placeholder="Usuario" />
             </div>
             <div class="my-3">
               <BInput
@@ -50,32 +52,30 @@ export default {
             recaptcha: null,
           }),
         }
-        console.log(data)
         const response = await axios.post('http://139.177.195.95/site/login/', qs.stringify(data), {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'User-Agent':
-              'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:134.0) Gecko/20100101 Firefox/134.0',
             Accept: 'application/json, text/plain, */*',
             'Accept-Language': 'es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3',
-            'Accept-Encoding': 'gzip, deflate',
             Origin: 'http://139.177.195.95',
-            Connection: 'keep-alive',
-            Referer: 'http://139.177.195.95/index.html',
             Cookie:
               'JSESSIONID.340536d2=node01jczydiety7wo12x3vxyraxoet17453.node0; jenkins-timestamper-offset=18000000',
             Priority: 'u=0',
           },
         })
-        if (response.data.success) {
-          alert('Login exitoso!')
-        } else {
-          this.errorMessage = response.data.message
-        }
         console.log(response)
+        if (response.status === 200) {
+          console.log(JSON.parse(response.data.encrypted))
+          localStorage.setItem('user', this.username)
+          //router.push('/dashboard')
+          this.$router.push('/dashboard')
+          //alert('Login exitoso!')
+        } else {
+          this.errorMessage = response.message
+        }
       } catch (error) {
         console.log(error)
-        this.errorMessage = 'Error de conexión. Por favor, inténtalo de nuevo.' + error
+        this.errorMessage = 'Error de conexión. Por favor, inténtalo de nuevo.'
       }
     },
   },
