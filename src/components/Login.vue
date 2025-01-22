@@ -20,10 +20,10 @@
                 placeholder="Contraseña"
               />
             </div>
+            <div v-if="errorMessage">{{ errorMessage }}</div>
             <BButton type="submit" variant="success">Login</BButton>
           </BForm>
         </BCard>
-        <div v-if="errorMessage">{{ errorMessage }}</div>
       </div>
       <div class="col-3"></div>
     </div>
@@ -57,19 +57,23 @@ export default {
             'Content-Type': 'application/x-www-form-urlencoded',
             Accept: 'application/json, text/plain, */*',
             'Accept-Language': 'es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3',
-            Origin: 'http://139.177.195.95',
-            Cookie:
-              'JSESSIONID.340536d2=node01jczydiety7wo12x3vxyraxoet17453.node0; jenkins-timestamper-offset=18000000',
             Priority: 'u=0',
           },
         })
-        console.log(response)
+
+        let resdata = JSON.parse(response.data.encrypted)
         if (response.status === 200) {
-          console.log(JSON.parse(response.data.encrypted))
-          localStorage.setItem('user', this.username)
-          //router.push('/dashboard')
-          this.$router.push('/dashboard')
-          //alert('Login exitoso!')
+          this.errorMessage = resdata.status == 322 ? resdata.data.password[0] : ''
+          if (resdata.status === 200){
+            console.log(resdata)
+            localStorage.setItem('user', this.username)
+            localStorage.setItem('data', JSON.stringify(resdata.data))
+            localStorage.setItem('dataMenu', JSON.stringify(resdata.dataMenu))
+            //router.push('/dashboard')
+            this.$router.push('/dashboard')
+            //alert('Login exitoso!')
+          }
+
         } else {
           this.errorMessage = response.message
         }
