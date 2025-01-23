@@ -60,16 +60,14 @@ export default {
             Priority: 'u=0',
           },
         })
-
         let resdata = JSON.parse(response.data.encrypted)
         if (response.status === 200) {
           this.errorMessage = resdata.status == 322 ? resdata.data.password[0] : ''
           if (resdata.status === 200){
-            console.log(resdata)
             localStorage.setItem('user', this.username)
             localStorage.setItem('data', JSON.stringify(resdata.data))
             localStorage.setItem('dataMenu', JSON.stringify(resdata.dataMenu))
-            //router.push('/dashboard')
+            localStorage.setItem('token', JSON.stringify(resdata.data.accessToken))
             this.$router.push('/dashboard')
             //alert('Login exitoso!')
           }
