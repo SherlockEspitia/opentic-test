@@ -1,13 +1,22 @@
 <template>
-  <BNavbar class="navbar navbar-light bg-light d-flex wrap ">
+  <BNavbar fluid="sm" variant="light" toggleable="sm" class="navbar-nav-scroll">
     <BNavbarBrand>{{ user }}</BNavbarBrand>
-    <BNavbarNav >
-      <BNavItemDropdown v-for="menu in menuOpciones" :key="menu.idModulo" :text="menu.nombre">
-        <BDropdownItem v-for="(op,idx) in menu.children" :key="idx"> {{ op.aliasRolOperacion }}</BDropdownItem>
-      </BNavItemDropdown>
-    </BNavbarNav>
+    <BNavbarToggle target="navcollapse" />
+    <BCollapse id="navcollapse" is-nav>
+      <BNavbarNav class="flex-wrap">
+        <BNavItemDropdown v-for="menu in menuOpciones" :key="menu.idModulo" :text="menu.nombre" placement="right-end">
+          <BDropdownItem v-for="(op,idx) in menu.children" :key="idx">
+            {{ op.aliasRolOperacion }}
+          </BDropdownItem>
+        </BNavItemDropdown>
+      </BNavbarNav>
+    </BCollapse>
+    <BImg v-bind="mainProps" rounded="circle" alt="Circle image" />
+    <BCollapse>
+      hello
+    </BCollapse>
   </BNavbar>
-  <BContainer>The Container </BContainer>
+  <BContainer></BContainer>
 </template>
 
 <script>
@@ -17,12 +26,18 @@ export default {
   data(){
     return {
       dataMenu: JSON.parse(localStorage.getItem('dataMenu')),
-      allDataUser: JSON.parse(localStorage.getItem('data'))
+      allDataUser: JSON.parse(localStorage.getItem('data')),
+      mainProps : {
+        blank: true,
+        blankColor: '#777',
+        width: 75,
+        height: 75,
+        class: 'm1',
+      }
     }
   },
   created(){
-    console.log('dataMenu', this.dataMenu)
-    console.log('operaciones', this.buscarOperaciones())
+    //console.log('operaciones', this.buscarOperaciones())
   },
   computed:{
     user(){
@@ -34,7 +49,6 @@ export default {
     menuOpciones(){
       let {menu} = this.dataMenu
       if(menu){
-        console.log('menu', menu)
         return menu
       }
       return []
@@ -51,9 +65,12 @@ export default {
         let tmpOp = operaciones.filter((operacion)=>
           operacion.nombreRolOperacion.split('%')[0] == menu.ruta
         )
-        menu.children = tmpOp
+        if(tmpOp.length==0){
+          menu.children = ['No hay operaciones']
+        }else{
+          menu.children = tmpOp
+        }
       })
-      console.log(menus[0].children)
       return operaciones
     }
   }

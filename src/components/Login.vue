@@ -68,6 +68,7 @@ export default {
             localStorage.setItem('data', JSON.stringify(resdata.data))
             localStorage.setItem('dataMenu', JSON.stringify(resdata.dataMenu))
             localStorage.setItem('token', JSON.stringify(resdata.data.accessToken))
+            console.log('data', resdata)
             this.$router.push('/dashboard')
             //alert('Login exitoso!')
           }
