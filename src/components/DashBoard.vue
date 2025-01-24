@@ -11,9 +11,12 @@
         </BNavItemDropdown>
       </BNavbarNav>
     </BCollapse>
-    <BImg v-bind="mainProps" rounded="circle" alt="Circle image" />
-    <BCollapse>
-      hello
+    <BImg v-bind="mainProps" rounded="circle" alt="Circle image" @click="toogleUser"/>
+    <BCollapse id="user-toogle" v-model="isToogleUser">
+      <div class="user-menu-content">
+          <p>{{ user }}</p>
+          <BButton @click="logout">Cerrar Sesión</BButton>
+        </div>
     </BCollapse>
   </BNavbar>
   <BContainer></BContainer>
@@ -33,7 +36,8 @@ export default {
         width: 75,
         height: 75,
         class: 'm1',
-      }
+      },
+      isToogleUser: false
     }
   },
   created(){
@@ -72,11 +76,31 @@ export default {
         }
       })
       return operaciones
+    },
+    toogleUser(){
+      this.isToogleUser = !this.isToogleUser
+    },
+    logout(){
+      localStorage.removeItem('user')
+      localStorage.removeItem('data')
+      localStorage.removeItem('dataMenu')
+      localStorage.removeItem('token')
+      this.$router.push('/')
     }
   }
 }
 </script>
 
 <style>
-
+.user-menu-content {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  margin-top: 0.5rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  z-index: 1050;
+}
 </style>
